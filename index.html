@@ -1,0 +1,51 @@
+<!--
+  In the past, the DOCTYPE was needed to specify HTML versions.
+  As of HTML5, providing `html` is sufficient.
+  It is somewhere between a proper HTML tag, and an HTML comment.
+-->
+<!DOCTYPE html>
+<!-- Add the appropriate language for your site -->
+<html lang="en">
+  <head>
+    <!--
+    UTF-8 is a character set including many universal characters.
+    This is an essential tag for all websites, to avoid seeing
+    weird boxes like ▢▢▢
+  -->
+    <meta charset="utf-8" />
+    <!--
+    This critical tag ensures that items on the screen scale
+    correctly on mobile devices. Without this tag, content may
+    appear VERY tiny.
+  -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--
+    Set your name and a brief description.
+    Used by search engines.
+  -->
+    <meta name="author" content="Adam" />
+    <meta name="description" content="A clone of Dark Blue" />
+    <!-- Include one or more CSS files -->
+    <link href="style.css" rel="stylesheet" />
+    <!--
+    A favicon is the small picture that shows up in the browser's
+    tab. Historically, these used a proprietary ".ico" format, and
+    you needed to provide many different sizes.
+    Happily, you can now provide a single vector graphic in SVG
+    format. It will scale to any size, and still look crisp.
+  -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- This title shows up in the page's tab, next to the favicon -->
+    <title>Dark Blue Clone</title>
+  </head>
+  <body>
+    <h1>Dark Blue Clone</h1>
+
+    <!-- If necessary, include JS -->
+    <script src="index.js"></script>
+    <script>
+      let simpleLevel = new Level(simpleLevelPlan);
+      let display = new DOMDisplay(document.body, simpleLevel);
+    </script>
+  </body>
+</html>
