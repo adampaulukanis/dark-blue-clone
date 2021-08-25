@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Adam" />
+    <meta name="description" content="Mocha tests of the Dark Blue Clone" />
+    <link rel="icon" href="data:;base64,=" />
+    <link rel="stylesheet" href="mocha.css" />
+    <title>Mocha tests</title>
+  </head>
+  <body>
+    <a href=".">index</a> <a href="tests.html">Tests</a>
+
+    <section id="mocha"></section>
+
+    <script src="mocha.js"></script>
+
+    <script class="mocha-init">
+      mocha.setup("tdd"); // with tdd it looks almost like fiveam for CLISP
+      mocha.checkLeaks();
+      mocha.growl(); // Enables web notifications
+    </script>
+    <script src="assert.js"></script>
+    <script src="tests.js"></script>
+    <script class="mocha-exec">
+      mocha.run();
+    </script>
+  </body>
+</html>
