@@ -7,7 +7,8 @@ function AssertationFailed (message) {
 AssertationFailed.prototype = Object.create(Error.prototype);
 
 function assert (test, message) {
-  if (!test) {
-    throw new AssertationFailed(message);
+  if (!Boolean(test)) {
+    throw new AssertationFailed(message || 'unknown assertion error');
   }
 }
+
