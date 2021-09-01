@@ -44,6 +44,12 @@ let simpleLevelPlan = [
 function Level(plan) {
   // assert(plan != null);
 
+  /** @type {Array} */
+  /** @type {string} plan[0] */
+  if (!Array.isArray(plan) || !typeof plan[0] === 'string' || plan == null) {
+    throw new Error('Plan should be an array and made of strings');
+  }
+
   /** @type {!number} */
   this.width = plan[0].length;
 
