@@ -6,7 +6,7 @@
   "scripts": {
     "start": "php -S localhost:6475",
     "test": "echo 'hit the web browser and check tests.html!'",
-    "pretest": "prettier -c *.js"
+    "pretest": "prettier -c *.js *.css"
   },
   "author": "",
   "license": "ISC"

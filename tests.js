@@ -27,9 +27,7 @@ suite('Test Level class', function () {
   });
   test('A proper plan passed to Level constructor, should pass', function () {
     testLevel = new Level(simpleLevelPlan);
-    assert(testLevel.player[0] instanceof Player);
-    assert(testLevel.player.length === 1, 'Only one player');
-    assert(Array.isArray(testLevel.player) === true, 'player is an array');
+    assert(testLevel.player instanceof Player, 'player should be of Player');
   });
 });
 
@@ -168,12 +166,29 @@ suite('Test Coin class', function () {
   test('can wobble', function () {
     assert(coin.wobble, 'has this property');
     // Random number <0 - 1>
-    assert(coin.wobble >= 0, 'must be equal hiher than 0');
-    assert(coin.wobble < 1 * Math.PI * 2, 'must be equal less 1 * Math.PI * 2');
+    assert(coin.wobble >= 0, 'must be equal or higher than 0');
+    assert(
+      coin.wobble < 1 * Math.PI * 2,
+      'must be equal or less 1 * Math.PI * 2'
+    );
   });
   test('Type is coin', function () {
     assert(coin.type === 'coin', 'type is coin');
   });
 });
+
+suite('Test elt function', function () {
+  test('should return div element with empty className', function () {
+    var div = elt('div');
+    assert(div instanceof HTMLDivElement, 'div should be HTMLDivElement');
+    assert(div.className === '', 'div.className is empty');
+  });
+  test('should return div element with game class', function () {
+    var div = elt('div', 'game');
+    assert(div.className === 'game', 'div.className is equal to game');
+  });
+});
+
+suite('Test DOMDisplay', function () {});
 
 suite('IT tests', function () {});

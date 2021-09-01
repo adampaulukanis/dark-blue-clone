@@ -42,7 +42,7 @@ let simpleLevelPlan = [
  * @todo mechanizmy sprawdzające nieprawidłowe dane wejściowe: prawidłowo zbudowana plansza z pozycją początkową gracza i inne niezbędne składniki.
  */
 function Level(plan) {
-  assert(plan != null);
+  // assert(plan != null);
 
   /** @type {!number} */
   this.width = plan[0].length;
@@ -86,6 +86,7 @@ function Level(plan) {
   if (this.player.length !== 1) {
     throw new Error('There should be one and only one player');
   }
+  this.player = this.player[0];
 
   /** status - czy gracz wygrał, czy przegrał */
   this.status = null;
@@ -193,3 +194,91 @@ function Coin(pos) {
 }
 
 Coin.prototype.type = 'coin';
+
+function elt(name, className) {
+  var elt = document.createElement(name);
+  if (className) {
+    elt.className = className;
+  }
+  return elt;
+}
+
+/**
+ * A display is created by giving it a parent element to which it should append
+ * itself and a level object.
+ * @constructor
+ */
+function DOMDisplay(parent, level) {
+  this.wrap = parent.appendChild(elt('div', 'game'));
+  this.level = level;
+
+  this.wrap.appendChild(this.drawBackground());
+  this.actorLayer = null;
+  this.drawFrame();
+}
+
+var scale = 20;
+
+DOMDisplay.prototype.drawBackground = function () {
+  var table = elt('table', 'background');
+  table.style.width = this.level.width * scale + 'px';
+  this.level.grid.forEach(function (row) {
+    var rowElt = table.appendChild(elt('tr'));
+    rowElt.style.height = scale + 'px';
+    row.forEach(function (type) {
+      rowElt.appendChild(elt('td', type));
+    });
+  });
+  return table;
+};
+
+DOMDisplay.prototype.drawActors = function () {
+  var wrap = elt('div');
+  this.level.actors.forEach(function (actor) {
+    var rect = wrap.appendChild(elt('div', 'actor ' + actor.type));
+    rect.style.width = actor.size.x * scale + 'px';
+    rect.style.height = actor.size.y * scale + 'px';
+    rect.style.left = actor.pos.x * scale + 'px';
+    rect.style.top = actor.pos.y * scale + 'px';
+  });
+  return wrap;
+};
+
+DOMDisplay.prototype.drawFrame = function () {
+  if (this.actorLayer) {
+    this.wrap.removeChild(this.actorLayer);
+  }
+  this.actorLayer = this.wrap.appendChild(this.drawActors());
+  this.wrap.className = 'game ' + (this.level.status || '');
+  this.scrollPlayerIntoView();
+};
+
+DOMDisplay.prototype.scrollPlayerIntoView = function () {
+  var width = this.wrap.clientWidth;
+  var height = this.wrap.clientHeight;
+  var margin = width / 3;
+
+  // The viewport
+  var left = this.wrap.scrollLeft,
+    right = left + width;
+  var top = this.wrap.scrollTop,
+    bottom = top + height;
+
+  var player = this.level.player;
+  var center = player.pos.plus(player.size.times(0.5)).times(scale);
+
+  if (center.x < left + margin) {
+    this.wrap.scrollLeft = center.x - margin;
+  } else if (center.x > right - margin) {
+    this.wrap.scrollLeft = center.x + margin - width;
+  }
+  if (center.y < top + margin) {
+    this.wrap.scrollTop = center.y - margin;
+  } else if (center.y > bottom - margin) {
+    this.wrap.scrollTop = center.y + margin - height;
+  }
+};
+
+DOMDisplay.prototype.clear = function () {
+  throw Error();
+};
