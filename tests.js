@@ -1,7 +1,36 @@
 'use strict';
 
 suite('Test Level class', function () {
-  test('Write a test');
+  var testPlan = null;
+  var testLevel = null;
+  test('No player at all, should return an error', function () {
+    testPlan = [' '];
+    try {
+      testLevel = new Level(testPlan);
+    } catch (err) {
+      assert(err);
+    }
+  });
+  test('Two players, too many, should throw an error', function () {
+    testPlan = ['@@ ', '   ', '   '];
+    try {
+      testLevel = new Level(testPlan);
+    } catch (err) {
+      assert(err);
+    }
+  });
+  test('One player and should pass', function () {
+    testPlan = ['x  ', '  @', ' v '];
+    testLevel = new Level(testPlan);
+    assert(testLevel.width === 3);
+    assert(testLevel.height === 3);
+  });
+  test('A proper plan passed to Level constructor, should pass', function () {
+    testLevel = new Level(simpleLevelPlan);
+    assert(testLevel.player[0] instanceof Player);
+    assert(testLevel.player.length === 1, 'Only one player');
+    assert(Array.isArray(testLevel.player) === true, 'player is an array');
+  });
 });
 
 suite('Test Vector class. v = new Vector(1, 2)', function () {
@@ -33,9 +62,18 @@ suite('Test Vector class. v = new Vector(1, 2)', function () {
 suite('Test Player class', function () {
   var pos = new Vector(10, 12);
   var p = new Player(pos);
-  test('Has pos property');
-  test('Has size');
-  test('Has speed');
+  test('Has pos property', function () {
+    assert(p.pos.x === 10);
+    assert(p.pos.y === 12 + -0.5);
+  });
+  test('Has size', function () {
+    assert((p.size.x = 0.8));
+    assert((p.size.y = 1.5));
+  });
+  test('Has speed', function () {
+    assert(p.speed.x === 0);
+    assert(p.speed.y === 0);
+  });
   test('Type is player', function () {
     assert(p.type === 'player');
   });
@@ -115,6 +153,27 @@ suite('Test Lava class. pos = new Vector(10, 12)', function () {
   });
 });
 
-suite('Test Coin class', function () {});
+suite('Test Coin class', function () {
+  var coin = null;
+  var pos = new Vector(10, 12);
+  setup(function () {
+    coin = new Coin(pos);
+  });
+  test('it has the base position', function () {
+    assert(coin.basePos === coin.pos);
+  });
+  test('has size', function () {
+    assert(coin.size instanceof Vector);
+  });
+  test('can wobble', function () {
+    assert(coin.wobble, 'has this property');
+    // Random number <0 - 1>
+    assert(coin.wobble >= 0, 'must be equal hiher than 0');
+    assert(coin.wobble < 1 * Math.PI * 2, 'must be equal less 1 * Math.PI * 2');
+  });
+  test('Type is coin', function () {
+    assert(coin.type === 'coin', 'type is coin');
+  });
+});
 
-suite('IT tests');
+suite('IT tests', function () {});

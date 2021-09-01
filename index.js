@@ -41,7 +41,9 @@ let simpleLevelPlan = [
  *
  * @todo mechanizmy sprawdzające nieprawidłowe dane wejściowe: prawidłowo zbudowana plansza z pozycją początkową gracza i inne niezbędne składniki.
  */
-function Level (plan) {
+function Level(plan) {
+  assert(plan != null);
+
   /** @type {!number} */
   this.width = plan[0].length;
 
@@ -50,17 +52,21 @@ function Level (plan) {
 
   /** każdy element ma swój typ (type) albo jest null, jeśli jest pusty */
   this.grid = [];
-  
+
   /** elementy dynamiczne */
   this.actors = [];
 
-  for (var y = 0; y < this.height;y++) {
-    var line = plan[y], gridLine = [];
-    for (var x = 0; x < this.width;x++) {
-      var ch = line[x], fieldType = null;
+  for (var y = 0; y < this.height; y++) {
+    var line = plan[y],
+      gridLine = [];
+    for (var x = 0; x < this.width; x++) {
+      var ch = line[x],
+        fieldType = null;
       var Actor = actorChars[ch];
       if (Actor) {
-        this.actors.push(new Actor(new Vector(x, y), ch /* used only with Lava class */));
+        this.actors.push(
+          new Actor(new Vector(x, y), ch /* used only with Lava class */)
+        );
       } else if (ch == 'x') {
         fieldType = 'wall';
       } else if (ch == '!') {
@@ -76,7 +82,10 @@ function Level (plan) {
    */
   this.player = this.actors.filter(function (actor) {
     return actor.type == 'player';
-  })[0];
+  });
+  if (this.player.length !== 1) {
+    throw new Error('There should be one and only one player');
+  }
 
   /** status - czy gracz wygrał, czy przegrał */
   this.status = null;
@@ -95,7 +104,7 @@ Level.prototype.isFinished = function () {
 };
 
 /** Obiekt Vector służy do określania pozycji w R^2 */
-function Vector (x, y) {
+function Vector(x, y) {
   this.x = x || 0;
   this.y = y || 0;
 }
@@ -112,15 +121,17 @@ Vector.prototype.times = function (factor) {
 /** Obiekt służy do tego, aby powiązać znaki z funkcjami konstrukcyjnymi */
 var actorChars = {
   '@': Player,
-  'o': Coin,
-  '=': Lava, '|': Lava, 'v': Lava
+  o: Coin,
+  '=': Lava,
+  '|': Lava,
+  v: Lava,
 };
 
 /** Player class
  * @constructor
  * @param {Vector} pos - position of the object (top left corner)
  */
-function Player (pos) {
+function Player(pos) {
   /**
    * The height of the player is 1.5, so its starting position is
    * 1/2 above the @ character
@@ -132,7 +143,7 @@ function Player (pos) {
   this.size = new Vector(0.8, 1.5);
 
   /** @var {Vector} speed - the actual speed of the player. It will help with
-   * simulating gravity and momentum. Player starts 
+   * simulating gravity and momentum. Player starts
    */
   this.speed = new Vector(0, 0);
 }
@@ -145,7 +156,7 @@ Player.prototype.type = 'player';
  * @param {Vector} pos - position of the object (top left corner)
  * @param {String} ch - kind of lava we want
  */
-function Lava (pos, ch) {
+function Lava(pos, ch) {
   /** @var {Vector} pos */
   this.pos = pos;
 
@@ -172,6 +183,13 @@ Lava.prototype.type = 'lava';
  * @constructor
  * @param {Vector} pos - position of the object (top left corner)
  */
-function Coin (pos) {
+function Coin(pos) {
+  this.basePos = this.pos = pos.plus(new Vector(0.2, 0.1));
+
+  this.size = new Vector(0.6, 0.6);
+
+  /** Losowa pozycja startowa na fali, tak aby każda moneta falowała z inną fazą */
+  this.wobble = Math.random() * Math.PI * 2;
 }
 
+Coin.prototype.type = 'coin';
