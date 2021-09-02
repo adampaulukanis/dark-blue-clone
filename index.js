@@ -250,6 +250,16 @@ DOMDisplay.prototype.drawActors = function () {
   return wrap;
 };
 
+/**
+ * When it updates the display, the drawFrame method first removes the old actor
+ * graphics, if any, and then redraws them in their new positions. It may be
+ * tempting to try to reuse the DOM elements for actors, but to make that work,
+ * we would need a lot of additional information flow between the display code
+ * and the simulation code. We’d need to associate actors with DOM elements, and
+ * the drawing code must remove elements when their actors vanish. Since there
+ * will typically be only a handful of actors in the game, redrawing all of them
+ * is not expensive.
+ */
 DOMDisplay.prototype.drawFrame = function () {
   if (this.actorLayer) {
     this.wrap.removeChild(this.actorLayer);
