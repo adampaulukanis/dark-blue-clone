@@ -30,6 +30,8 @@ let simpleLevelPlan = [
   '                      ',
 ];
 
+var WALL_TYPE = 'wall';
+
 /**
  * Gra będzie opierać się na prostych poziomach, wcześniej zrobionych, które
  * użytkownik musi przejść, aby ukończyć grę. Aby przejść poziom, należy zebrać
@@ -74,9 +76,9 @@ function Level(plan) {
           new Actor(new Vector(x, y), ch /* used only with Lava class */)
         );
       } else if (ch == 'x') {
-        fieldType = 'wall';
+        fieldType = WALL_TYPE;
       } else if (ch == '!') {
-        fieldType = 'lava';
+        fieldType = LAVA_TYPE;
       }
       gridLine.push(fieldType);
     }
@@ -120,10 +122,10 @@ Level.prototype.obstacleAt = function (pos, size) {
   var yEnd = Math.ceil(pos.y + size.y);
 
   if (xStart < 0 || xEnd > this.width || yStart < 0) {
-    return 'wall';
+    return WALL_TYPE;
   }
   if (yEnd > this.height) {
-    return 'lava';
+    return LAVA_TYPE;
   }
   for (var y = yStart; y < yEnd; y++) {
     for (var x = xStart; x < xEnd; x++) {
@@ -176,10 +178,10 @@ Level.prototype.animate = function (step, keys) {
 };
 
 Level.prototype.playerTouched = function (type, actor) {
-  if (type == 'lava' && this.status == null) {
+  if (type == LAVA_TYPE && this.status == null) {
     this.status = 'lost';
     this.finishDelay = 1;
-  } else if (type == 'coin') {
+  } else if (type == COIN_TYPE) {
     this.actors = this.actors.filter(function (other) {
       return other != actor;
     });

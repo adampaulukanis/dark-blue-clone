@@ -75,8 +75,8 @@ body {
 }
 .game {
   overflow: hidden;
-  max-width: 600px;
-  max-height: 450px;
+  max-width: 800px;
+  max-height: 550px;
   position: relative;
   margin: 1rem auto;
 }
